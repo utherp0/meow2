@@ -35,6 +35,14 @@ app.get('/containerip', function (req,res)
 
 app.get('/cat', function (req,res)
 {
+  requestURL = req.url;
+
+  console.log( "  URL: " + requestURL );
+  console.log( "  Method: " + req.method );
+
+  fullURL = 'http://' + req.headers.host + req.url;
+  console.log( "  Full URL: " + fullURL );
+
   console.log( "Cat service called with param: " + req,query.cat);
   res.write( "TEMPORARY CAT RESPONSE");
   res.end();
