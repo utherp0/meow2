@@ -43,7 +43,7 @@ app.get('/cat', function (req,res)
   fullURL = 'http://' + req.headers.host + req.url;
   console.log( "  Full URL: " + fullURL );
 
-  console.log( "Cat service called with param: " + req,query.cat);
+  console.log( "Cat service called with param: " + req.query.cat);
   res.write( "TEMPORARY CAT RESPONSE");
   res.end();
   return;
