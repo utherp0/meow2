@@ -121,8 +121,7 @@
         if( text != "No Such cat!" )
         {
           // Randomise the image (1-3)
-          selectedImage = getRndInteger(1, 3);
-          alert( "Random Image chosen " + selectedImage );
+          selectedImage = getRndInteger(1, 4);
 
           text = "<img src='images/" + catID + selectedImage + ".png' width='200px'><br/><br/><b>" + text + "</b> (returned from webservice).";
         }
