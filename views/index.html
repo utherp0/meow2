@@ -13,6 +13,17 @@
   <style>
     /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
     .row.content {height: 500px}
+
+    /* Scroller */
+    div.scroller 
+    {
+      background-color: black;
+      color:white;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 12px;
+      height: 150px;
+      overflow: scroll;
+    }  
     
     /* Set gray background color and 100% height */
     .sidenav {
@@ -51,6 +62,14 @@
   </style>
 
   <script>
+
+    function log( message )
+    {
+      targetLog = document.getElementById("log");
+      adjustedMessage = message + "<br/>";
+
+      targetLog.innerHTML = "[" + displayTime() + "] " + adjustedMessage + targetLog.innerHTML;
+    }
 
     function getRndInteger(min, max) 
     {
@@ -103,6 +122,7 @@
 
     function catLookup(catID)
     {
+      log( "Calling webservice with target puss " + catID)
       document.getElementById('catOutputSpan').innerHTML = "{Calling Webservice}..";
 
       var d = new Date();
@@ -125,9 +145,15 @@
 
           text = "<img src='images/" + catID + selectedImage + ".png' width='200px'><br/><br/><b>" + text + "</b> (returned from webservice).";
         }
+        else
+        {
+          log( "Round trip processed in " + Math.ceil( end - start ) + "ms." );
+          log( "No such cat " + catID );
+        }
 
         document.getElementById('webserviceElapsed').innerHTML = "" + Math.ceil( end - start ) + "ms.";
         document.getElementById('catOutputSpan').innerHTML = text;
+        log( "Round trip processed in " + Math.ceil( end - start ) + "ms." );
 
         var catIDdisplay = "" + catID;
 
@@ -172,29 +198,17 @@
       </div>
     </div>
 
+
     <div class="col-sm-9">
+      <h2>Application Log</h2>
+      <div class="scroller" width="98%" height="200px" id="log"></div>
+      
       <h2>Output from Meow2 Node Webservices</h2>
       <h5><span class="glyphicon glyphicon-time"></span> Last called <b><span id="webserviceCalled">(not called)</span></b>.</h5>
       <h5><span class="glyphicon glyphicon-time"></span> Webservice response time <b><span id="webserviceElapsed">(not called)</span></b></h5>
       <h5><span class="label label-success" id="bulletInfo">(No Cat Chosen)</span></h5><br>
       <span id="catOutputSpan"></span>
       
-      <hr>
-      <h2>Output from direct Webservices.</h2>
-      <h5><span class="glyphicon glyphicon-time"></span> Last called <b><span id="webservice2Called">(not called)</span></b>.</h5>
-      <h5><span class="glyphicon glyphicon-time"></span> Webservice response time <b><span id="webservice2Elapsed">(not called)</span></b></h5>
-      <h5><span id="targeturl" class="label label-success">No URL Entered</span></h5><br>
-      <p class="webserviceoutput" id="webserviceOutput">Response from Webservice.</p>
-      <hr>
-
-      <h4>Enter a URL for a cat Webservice:</h4>
-      <form role="form">
-        <div class="form-group">
-          <textarea class="form-control" id="wsurl" rows="1" placeholder="Enter fully formed Webservice URL here..." required></textarea>
-        </div>
-        <button type="button" class="btn btn-success" onClick="callService(document.getElementById('wsurl').value);">Call the Webservice Manually.</button>
-      </form>
-      <br><br>
     </div>
   </div>
 </div>

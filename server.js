@@ -44,7 +44,46 @@ app.get('/cat', function (req,res)
   console.log( "  Full URL: " + fullURL );
 
   console.log( "Cat service called with param: " + req.query.cat);
-  res.write( "TEMPORARY CAT RESPONSE");
+
+  switch( req.query.cat.toLowerCase())
+  {
+    case "winnie":
+    {
+      res.write( "Irritable meow, hiss at other cats, purr when alone with humans.");
+      break;
+    }
+    case "kali":
+    {
+      res.write( "Plot mayhem against the other cats, allow humans to pet for 10.5 secs then scratch");
+      break;
+    }
+    case "murphy":
+    {
+      res.write( "Be adorable. Put wicker basket on head. Attack other cats whilst helmet in place. Be more adorable");
+      break;
+    }
+    case "jessie":
+    {
+      res.write( "Emotionally blackmail humans into letting her outside. Kill absolutely everything outside. Come back in and purr");
+      break;
+    }
+    case "dexter":
+    {
+      res.write( "Wake humans up at 3:00, 4:00 or 5:00am and moan until they let him out. Be adorably Ginger.");
+      break;
+    }
+    case "molly":
+    {
+      res.write( "Avoid other cats at all costs. Have an adorably raspy meow. Drink stale water from puddles.");
+      break;
+    }
+    default:
+    {
+      res.write("No Such cat!");
+      break;
+    }
+  }
+
   res.end();
   return;
 });
