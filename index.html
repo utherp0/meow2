@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Red Hat UK DSA Meow2</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <style>
+    /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+    .row.content {height: 500px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+
+    .webserviceoutput {
+      background-color: green;
+      color: white;
+      padding: 2px;
+    }
+    
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #aaa;
+      color: white;
+      padding: 15px;
+    }
+
+    /* Set black background color, white text and some padding */
+    header {
+      background-color: #aaa;
+      color: white;
+      padding: 15px;
+    }
+    
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height: auto;} 
+    }
+  </style>
+
+  <script>
+
+    function displayTime()
+    {
+      var d = new Date();
+
+      var display = "" + ( d.getHours() < 10 ? "0":"" ) + d.getHours() + ":" +
+                         ( d.getMinutes() < 10 ? "0":"" ) + d.getMinutes() + ":" +
+                         ( d.getSeconds() < 10 ? "0":"" ) + d.getSeconds();
+
+      return display;
+    }
+
+    function callService(serviceURL)
+    {
+      if( serviceURL == "" )
+      {
+        document.getElementById('webserviceOutput').innerHTML = "Please enter a webservice URL.";
+
+        return;
+      }
+
+      document.getElementById('webserviceOutput').innerHTML = "{Processing External Webservice}..";
+
+      var d = new Date();
+      document.getElementById("webservice2Called").innerHTML = d.toDateString() + " at " + displayTime();
+
+      var start = performance.now();
+
+      $.ajax(
+      {
+        url: serviceURL,
+        crossDomain: true,
+        dataType: 'text',
+      }).done(function(text)
+      {
+        var end = performance.now();
+
+        document.getElementById('webserviceOutput').innerHTML = text;
+
+        document.getElementById('webservice2Elapsed').innerHTML = "" + Math.ceil( end - start ) + "ms.";
+
+        document.getElementById('targeturl').innerHTML = serviceURL;
+      });
+    }
+
+    function catLookup(catID)
+    {
+      document.getElementById('catOutputSpan').innerHTML = "{Calling Webservice}..";
+
+      var d = new Date();
+      document.getElementById("webserviceCalled").innerHTML = d.toDateString() + " at " + displayTime();
+
+      var start = performance.now();
+
+      $.ajax(
+      {
+        url: '/cat/'+catID,
+        dataType: 'text',
+      }).done(function(text)
+      {
+        var end = performance.now();
+
+        if( text != "No Such cat!" )
+        {
+          text = "<img src='images/" + catID + ".png' width='200px'><br/><br/><b>" + text + "</b> (returned from webservice).";
+        }
+
+        document.getElementById('webserviceElapsed').innerHTML = "" + Math.ceil( end - start ) + "ms.";
+        document.getElementById('catOutputSpan').innerHTML = text;
+
+        var catIDdisplay = "" + catID;
+
+        document.getElementById('bulletInfo').innerHTML = catIDdisplay.toUpperCase();
+      });
+    }
+
+  </script>
+</head>
+<body>
+
+<header class="container-fluid" align="right">
+  <p><img src="images/redhat.png" width="100px"/></p>
+</header>
+
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-3 sidenav">
+      <br/>
+      <div width="100" align="center"><img src="images/cover.png" width="75%"></div>
+      <h4>Meow2 OCP4.2 Demp</h4>
+      Cat oriented demo for OCP4.2 and Operators.
+      <br/><br/>
+
+      <div align="center">
+        <img src="images/winnie1.png" title="Winnie the Cat" onClick="catLookup('winnie');" width="50px">
+        <img src="images/jessie1.png" title="Jessie the Kitten" onClick="catLookup('jessie');" width="50px">
+        <img src="images/murphy1.png" title="Murphy the Kitten" onClick="catLookup('murphy');" width="50px"><br/>
+        <img src="images/molly1.png" title="Molly the Hunter" onClick="catLookup('molly');" width="50px">
+        <img src="images/dexter1.png" title="Dexter the Ginger" onClick="catLookup('dexter');" width="50px">
+        <img src="images/kali1.png" title="Kali the Cat" onClick="catLookup('kali');" width="50px"> 
+      </div>
+      <br/><br/>
+
+      <div class="input-group">
+        <input type="text" class="form-control" id="catName" placeholder="Enter a Cat name...">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button" onClick="catLookup(document.getElementById('catName').value);">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+        </span>
+      </div>
+    </div>
+
+    <div class="col-sm-9">
+      <h2>Output from Meow2 Node Webservices</h2>
+      <h5><span class="glyphicon glyphicon-time"></span> Last called <b><span id="webserviceCalled">(not called)</span></b>.</h5>
+      <h5><span class="glyphicon glyphicon-time"></span> Webservice response time <b><span id="webserviceElapsed">(not called)</span></b></h5>
+      <h5><span class="label label-success" id="bulletInfo">(No Cat Chosen)</span></h5><br>
+      <span id="catOutputSpan"></span>
+      
+      <hr>
+      <h2>Output from direct Webservices.</h2>
+      <h5><span class="glyphicon glyphicon-time"></span> Last called <b><span id="webservice2Called">(not called)</span></b>.</h5>
+      <h5><span class="glyphicon glyphicon-time"></span> Webservice response time <b><span id="webservice2Elapsed">(not called)</span></b></h5>
+      <h5><span id="targeturl" class="label label-success">No URL Entered</span></h5><br>
+      <p class="webserviceoutput" id="webserviceOutput">Response from Webservice.</p>
+      <hr>
+
+      <h4>Enter a URL for a cat Webservice:</h4>
+      <form role="form">
+        <div class="form-group">
+          <textarea class="form-control" id="wsurl" rows="1" placeholder="Enter fully formed Webservice URL here..." required></textarea>
+        </div>
+        <button type="button" class="btn btn-success" onClick="callService(document.getElementById('wsurl').value);">Call the Webservice Manually.</button>
+      </form>
+      <br><br>
+    </div>
+  </div>
+</div>
+
+<footer class="container-fluid">
+  <p><img src="images/openshift.png" width="125px"/></p>
+</footer>
+
+</body>
+</html>
