@@ -33,6 +33,14 @@ app.get('/containerip', function (req,res)
   res.end();
 });
 
+app.get('/cat', function (req,res)
+{
+  console.log( "Cat service called with param: " + req,query.cat);
+  res.write( "TEMPORARY CAT RESPONSE");
+  res.end();
+  return;
+});
+
 app.get('/fileappend', function (req,res)
 {
   requestURL = req.url;
