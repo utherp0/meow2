@@ -18,6 +18,8 @@ app.use( '/images', express.static('images'));
 var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080;
 var ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 
+var counter = 0;
+
 // Comment for git testing again
 app.get('/', function (req, res)
 {
@@ -33,8 +35,16 @@ app.get('/containerip', function (req,res)
   res.end();
 });
 
+app.get('/count', function (req,res)
+{
+  res.write( "" + counter );
+  res.end();
+});
+
 app.get('/cat', function (req,res)
 {
+  counter++;
+
   requestURL = req.url;
 
   console.log( "  URL: " + requestURL );
